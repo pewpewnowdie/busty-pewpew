@@ -11,13 +11,13 @@ class Greetings(commands.Cog):
         fmt = await ctx.bot.tree.sync(guild=ctx.guild)
         await ctx.send(f"Synced {len(fmt)} commands.")
 
-    @app_commands.command()
-    async def hello(self, interaction: discord.Interaction):
-        await interaction.response.send_message(f'Hello {interaction.user.mention}!')
+    @commands.hybrid_command()
+    async def hello(self, ctx):
+        await ctx.send(f'Hello {ctx.author.mention}!')
 
-    @app_commands.command()
-    async def ping(self, interaction: discord.Interaction):
-        await interaction.response.send_message('pong! ' + str(round(self.bot.latency*1000)) + 'ms')
+    @commands.hybrid_command()
+    async def ping(self, ctx):
+        await ctx.send('pong! ' + str(round(self.bot.latency*1000)) + 'ms')
 
 async def setup(bot):
     await bot.add_cog(Greetings(bot))
