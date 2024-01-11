@@ -2,12 +2,14 @@ import os
 from dotenv import load_dotenv
 from logging.config import dictConfig
 import logging
+import discord
 
 load_dotenv()
 
 DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
 PREFIX = "!"
 OWNER_IDS = [int(os.getenv("OWNER_ID"))]
+MY_GUILD = discord.Object(id=int(os.getenv("MY_GUILD")))
 
 LOGGING_CONFIG = {
     "version": 1,

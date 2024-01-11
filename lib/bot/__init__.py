@@ -1,6 +1,7 @@
 import lib.bot.settings as settings
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 logger = settings.logging.getLogger('bot')
 
@@ -13,6 +14,10 @@ class MyBot(commands.Bot):
     def run(self):
         print('Running bot...')
         super().run(settings.DISCORD_API_SECRET, root_logger=True)
+
+    async def setup_hook(self):
+        self.tree.copy_global_to(guild=settings.MY_GUILD)
+        await self.tree.sync(guild=settings.MY_GUILD)
 
     async def on_ready(self) -> None:
         logger.info(f'User: {self.user.name} - {self.user.id}')
