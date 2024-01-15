@@ -30,4 +30,14 @@ bot = MyBot(command_prefix = settings.PREFIX, intents = intents)
 async def sync(ctx) -> None:
     if ctx.author.id not in settings.OWNER_IDS:
         return
-    print(await bot.tree.sync())
+    logger.info(await bot.tree.sync())
+
+@bot.hybrid_command()
+async def help(ctx):
+    '''Lists the commands of the bot'''
+    embed = discord.Embed(title="Help", description="list of all commands", color=discord.Color.blurple())
+
+    for slash_command in bot.tree.walk_commands():
+        embed.add_field(name=slash_command.name, value=slash_command.description if slash_command.description else slash_command.name, inline=False) 
+
+    await ctx.send(embed=embed)

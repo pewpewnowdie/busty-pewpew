@@ -1,2 +1,0 @@
-
-intents = discord.Intents.all()
