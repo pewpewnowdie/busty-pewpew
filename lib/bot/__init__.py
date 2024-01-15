@@ -32,10 +32,9 @@ async def sync(ctx) -> None:
         return
     logger.info(await bot.tree.sync())
 
-@bot.hybrid_command()
+@bot.hybrid_command(name='help', description='Lists the commands of the bot')
 async def help(ctx):
-    '''Lists the commands of the bot'''
-    embed = discord.Embed(title="Help", description="list of all commands", color=discord.Color.blurple())
+    embed = discord.Embed(title="Help", description="list of all commands", color=discord.Color.blurple()).set_thumbnail(url=bot.user.avatar)
 
     for slash_command in bot.tree.walk_commands():
         embed.add_field(name=slash_command.name, value=slash_command.description if slash_command.description else slash_command.name, inline=False) 
