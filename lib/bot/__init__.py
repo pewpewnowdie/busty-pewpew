@@ -17,11 +17,9 @@ class MyBot(commands.Bot):
 
     async def on_ready(self) -> None:
         logger.info(f'User: {self.user.name} - {self.user.id}')
-
         await bot.load_extension('lib.bot.cogs.greetings')
-        # await bot.load_extension('lib.bot.cogs.custom_games')
         await bot.load_extension('lib.bot.cogs.management')
-        
+        await bot.load_extension('lib.bot.cogs.utils')
         print('Bot ready')
 
 bot = MyBot(command_prefix = settings.PREFIX, intents = intents)
@@ -30,13 +28,4 @@ bot = MyBot(command_prefix = settings.PREFIX, intents = intents)
 async def sync(ctx) -> None:
     if ctx.author.id not in settings.OWNER_IDS:
         return
-    logger.info(await bot.tree.sync())
-
-@bot.hybrid_command(name='help', description='Lists the commands of the bot')
-async def help(ctx):
-    embed = discord.Embed(title="Help", description="list of all commands", color=discord.Color.blurple()).set_thumbnail(url=bot.user.avatar)
-
-    for slash_command in bot.tree.walk_commands():
-        embed.add_field(name=slash_command.name, value=slash_command.description if slash_command.description else slash_command.name, inline=False) 
-
-    await ctx.send(embed=embed)
+    logger.info(f'synced {len(await bot.tree.sync())} commands')

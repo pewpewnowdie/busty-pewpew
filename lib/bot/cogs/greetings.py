@@ -5,6 +5,7 @@ import lib.bot.settings as settings
 class Greetings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.description = "Greetings commands"
 
     @commands.hybrid_command(name='hello', aliases=['hi'], description='Say hello to the bot')
     async def hello(self, ctx):
