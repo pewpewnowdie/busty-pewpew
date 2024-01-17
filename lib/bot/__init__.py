@@ -17,9 +17,9 @@ class MyBot(commands.Bot):
 
     async def on_ready(self) -> None:
         logger.info(f'User: {self.user.name} - {self.user.id}')
-        await bot.load_extension('lib.bot.cogs.greetings')
-        await bot.load_extension('lib.bot.cogs.management')
-        await bot.load_extension('lib.bot.cogs.utils')
+        logger.info(f'Guilds: {len(self.guilds)}')
+        for cog in settings.COGS:
+            await bot.load_extension('lib.bot.cogs.'+cog)
         print('Bot ready')
 
 bot = MyBot(command_prefix = settings.PREFIX, intents = intents)

@@ -18,7 +18,7 @@ class HelpSelect(Select):
             commands.append(command)
         for command in cog.walk_app_commands():
             commands.append(command)
-        embed = discord.Embed(title=f"{cog.__cog_name__} Commands", description='\n'.join(f"**{command.name}**: {command.description}" for command in commands), color=discord.Color.blurple()).set_thumbnail(url=self.bot.user.avatar)
+        embed = discord.Embed(title=f"{cog.__cog_name__} Commands", description='\n'.join(f"**/{command.name}** : {command.description}" for command in commands), color=discord.Color.blurple()).set_thumbnail(url=self.bot.user.avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class Utils(commands.Cog):

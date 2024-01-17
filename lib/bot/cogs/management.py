@@ -22,7 +22,7 @@ class Management(commands.Cog):
         try:
             await log_channel.send(embed=embed)
         except Exception:
-            logger.error("'logs' channel not found, or bot missing permissions")
+            logger.error(f"'audit-logs' channel not found, or bot missing permissions in {interaction.guild.name}")
 
     def create_embed(self, func, user, reason, interaction:Interaction):
         embed = discord.Embed().set_author(name=f"[{func}] {user.name}", icon_url=user.avatar).add_field(name = "User", value = f"{user.mention}", inline = True).add_field(name = "Moderator", value = f"{interaction.user.mention}", inline = True).add_field(name = "Reason", value = f"{reason}", inline = True).add_field(name = "Channel", value = f"<#{interaction.channel.id}>", inline = False)
@@ -43,6 +43,7 @@ class Management(commands.Cog):
         await member.kick(reason=reason)
         embed = self.create_embed('KICK', member, reason, interaction)
         await interaction.response.send_message(embed=embed)
+        await member.send(embed=discord.Embed(title=f"You have been kicked from {interaction.guild.name}", description=f"Reason: {reason}", color=discord.Color.red()).set_thumbnail(url=interaction.guild.icon))
         await self.log(interaction,embed)
     @kick.error
     async def kick_error(self, interaction:Interaction, error):
@@ -55,6 +56,7 @@ class Management(commands.Cog):
         await member.ban(reason=reason)
         embed = self.create_embed('BAN', member, reason, interaction)
         await interaction.response.send_message(embed=embed)
+        await member.send(embed=discord.Embed(title=f"You have been banned from {interaction.guild.name}", description=f"Reason: {reason}", color=discord.Color.red()).set_thumbnail(url=interaction.guild.icon))
         await self.log(interaction,embed)
     @ban.error
     async def ban_error(self, interaction:Interaction, error):
@@ -103,10 +105,47 @@ class Management(commands.Cog):
             return
         embed=discord.Embed().set_author(name=f"[TIMEOUT] {member.name}", icon_url=member.avatar).add_field(name = "User", value = f"{member.mention}", inline = True).add_field(name = "Moderator", value = f"{interaction.user.mention}", inline = True).add_field(name = "Reason", value = f"{reason}", inline = True).add_field(name = "Channel", value = f"<#{interaction.channel.id}>", inline = False).add_field(name = "Duration", value = f"{minutes} minute(s)", inline = True)
         await interaction.response.send_message(embed=embed)
+        await member.send(embed=discord.Embed(title=f"You have been timed out in {interaction.guild.name} for {minutes} min", description=f"Reason: {reason}", color=discord.Color.red()).set_thumbnail(url=interaction.guild.icon))
         await self.log(interaction,embed)
         await member.timeout(timedelta(minutes=minutes), reason=reason)
     @timeout.error
     async def timeout_error(self, interaction:Interaction, error):
+        await interaction.response.send_message('You do not have permission to use this command', ephemeral=True)
+        logger.info(error)
+
+    @app_commands.command(name='giverole', description='Give a role to a user')
+    @app_commands.check(is_admin)
+    async def giverole(self, interaction:Interaction, member: discord.Member, role: discord.Role):
+        if role >= interaction.guild.me.top_role:
+            await interaction.response.send_message('You cannot give a role higher than me', ephemeral=True)
+            return
+        if role in member.roles:
+            await interaction.response.send_message('User already has this role', ephemeral=True)
+            return
+        await member.add_roles(role)
+        embed = discord.Embed().set_author(name=f"[GIVE ROLE] {member.name}", icon_url=member.avatar).add_field(name = "User", value = f"{member.mention}", inline = True).add_field(name = "Moderator", value = f"{interaction.user.mention}", inline = True).add_field(name = "Role", value = f"{role.mention}", inline = True).add_field(name = "Channel", value = f"<#{interaction.channel.id}>", inline = False)
+        await interaction.response.send_message(embed=embed)
+        await self.log(interaction,embed)
+    @giverole.error
+    async def giverole_error(self, interaction:Interaction, error):
+        await interaction.response.send_message('You do not have permission to use this command', ephemeral=True)
+        logger.info(error)
+    
+    @app_commands.command(name='takerole', description='Take a role from a user')
+    @app_commands.check(is_admin)
+    async def takerole(self, interaction:Interaction, member: discord.Member, role: discord.Role):
+        if role >= interaction.guild.me.top_role:
+            await interaction.response.send_message('You cannot take a role higher than me', ephemeral=True)
+            return
+        if role not in member.roles:
+            await interaction.response.send_message('User does not have this role', ephemeral=True)
+            return
+        await member.remove_roles(role)
+        embed = discord.Embed().set_author(name=f"[TAKE ROLE] {member.name}", icon_url=member.avatar).add_field(name = "User", value = f"{member.mention}", inline = True).add_field(name = "Moderator", value = f"{interaction.user.mention}", inline = True).add_field(name = "Role", value = f"{role.mention}", inline = True).add_field(name = "Channel", value = f"<#{interaction.channel.id}>", inline = False)
+        await interaction.response.send_message(embed=embed)
+        await self.log(interaction,embed)
+    @takerole.error
+    async def takerole_error(self, interaction:Interaction, error):
         await interaction.response.send_message('You do not have permission to use this command', ephemeral=True)
         logger.info(error)
 
