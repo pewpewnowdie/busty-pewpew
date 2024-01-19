@@ -10,7 +10,7 @@ DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
 PREFIX = "!"
 OWNER_IDS = [int(os.getenv("OWNER_ID"))]
 MY_GUILD = discord.Object(id=int(os.getenv("MY_GUILD")))
-COGS = ['greetings', 'management', 'utils', 'freebies']
+COGS = ['greetings', 'management', 'utils', 'freebies', 'emojis']
 
 LOGGING_CONFIG = {
     "version": 1,

@@ -32,5 +32,21 @@ class Utils(commands.Cog):
         view = View().add_item(HelpSelect(self.bot))
         await ctx.send(embed=embed, view=view)
 
+    @commands.hybrid_command(name='ping', description='Check the bot\'s latency')
+    async def ping(self, ctx):
+        await ctx.send('pong! ' + str(round(self.bot.latency*1000)) + 'ms')
+    
+    @commands.command(name='emoji_id_all', description='Shows id of all the emojis in the server')
+    async def emoji_id_all(self, ctx:commands.Context):
+        embed = discord.Embed(title="Emoji id", description='\n'.join(f"\{emoji}" for emoji in ctx.guild.emojis), color=discord.Color.blurple()).set_thumbnail(url=self.bot.user.avatar)
+        await ctx.send(embed=embed, ephemeral=True)
+
+    @commands.hybrid_command(name='avatar', description='Shows the avatar of a user')
+    async def avatar(self, ctx:commands.Context, user:discord.User=None):
+        if user is None:
+            user = ctx.author
+        embed = discord.Embed(title=f"{user.name}'s avatar", color=discord.Color.blurple()).set_image(url=user.avatar)
+        await ctx.send(embed=embed)
+
 async def setup(bot):
     await bot.add_cog(Utils(bot))

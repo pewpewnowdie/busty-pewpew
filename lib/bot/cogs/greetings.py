@@ -12,10 +12,6 @@ class Greetings(commands.Cog):
     async def hello(self, ctx):
         await ctx.send(f'Hello {ctx.author.mention}!')
 
-    @commands.hybrid_command(name='ping', description='Check the bot\'s latency')
-    async def ping(self, ctx):
-        await ctx.send('pong! ' + str(round(self.bot.latency*1000)) + 'ms')
-
     # @app_commands.command(name='setup spawn', description='Setup the spawn channel')
     # async def setup_spawn(self, interaction:Interaction, channel_name:str = 'spawn-island'):
     #     guild = interaction.guild

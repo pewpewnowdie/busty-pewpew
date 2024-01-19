@@ -149,5 +149,15 @@ class Management(commands.Cog):
         await interaction.response.send_message('You do not have permission to use this command', ephemeral=True)
         logger.info(error)
 
+    @app_commands.command(name='whois', description='Get information about a user')
+    @app_commands.check(is_admin)
+    async def whois(self, interaction:Interaction, member: discord.Member):
+        embed = discord.Embed().set_author(name=f"{member.name}", icon_url=member.avatar).add_field(name='Joined at', value=member.joined_at.strftime("%d/%m/%Y, %H:%M:%S"), inline=True).add_field(name='Created at', value=member.created_at.strftime("%d/%m/%Y, %H:%M:%S"), inline=True).add_field(name='Top Role', value=member.top_role.mention).add_field(name='Key permissions', value=''.join(f'*{permission}*' + ' ' for permission, value in member.guild_permissions if value), inline=False)
+        await interaction.response.send_message(embed=embed)
+    @whois.error
+    async def whois_error(self, interaction:Interaction, error):
+        await interaction.response.send_message('You do not have permission to use this command', ephemeral=True)
+        logger.info(error)
+
 async def setup(bot):
     await bot.add_cog(Management(bot))

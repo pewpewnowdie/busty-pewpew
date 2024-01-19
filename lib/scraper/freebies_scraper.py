@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup as bs
-import pickle
 
 class FreebiesScraper:
     def get_soup(self, url):
@@ -56,11 +55,3 @@ class FreebiesScraper:
         return self.get_games(min_discount=100, min_rating=0, pages=pages)
 
 scraper = FreebiesScraper()
-game_list = scraper.get_freebies()
-# ... existing code ...
-
-# Save game_list as a pickle file
-with open('lib/scraper/game_list.pickle', 'wb') as file:
-    pickle.dump(game_list, file)
-
-
