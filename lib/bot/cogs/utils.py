@@ -18,7 +18,7 @@ class HelpSelect(Select):
             commands.append(command)
         for command in cog.walk_app_commands():
             commands.append(command)
-        embed = discord.Embed(title=f"{cog.__cog_name__} Commands", description='\n'.join(f"**/{command.name}** : {command.description}" for command in commands), color=discord.Color.blurple()).set_thumbnail(url=self.bot.user.avatar)
+        embed = discord.Embed(title=f"{cog.__cog_name__} Commands", description='\n'.join(f"**/{command.name}** : {command.description}" if command.parent is None else f"**/{command.parent.name} {command.name}** : {command.description}" for command in commands), color=discord.Color.blurple()).set_thumbnail(url=self.bot.user.avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class Utils(commands.Cog):
@@ -35,11 +35,6 @@ class Utils(commands.Cog):
     @commands.hybrid_command(name='ping', description='Check the bot\'s latency')
     async def ping(self, ctx):
         await ctx.send('pong! ' + str(round(self.bot.latency*1000)) + 'ms')
-    
-    @commands.command(name='emoji_id_all', description='Shows id of all the emojis in the server')
-    async def emoji_id_all(self, ctx:commands.Context):
-        embed = discord.Embed(title="Emoji id", description='\n'.join(f"\{emoji}" for emoji in ctx.guild.emojis), color=discord.Color.blurple()).set_thumbnail(url=self.bot.user.avatar)
-        await ctx.send(embed=embed, ephemeral=True)
 
     @commands.hybrid_command(name='avatar', description='Shows the avatar of a user')
     async def avatar(self, ctx:commands.Context, user:discord.User=None):

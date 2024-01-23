@@ -12,17 +12,6 @@ class Greetings(commands.Cog):
     async def hello(self, ctx):
         await ctx.send(f'Hello {ctx.author.mention}!')
 
-    # @app_commands.command(name='setup spawn', description='Setup the spawn channel')
-    # async def setup_spawn(self, interaction:Interaction, channel_name:str = 'spawn-island'):
-    #     guild = interaction.guild
-    #     channel_name = channel_name.lower().strip().replace(' ', '-')
-    #     channel = discord.utils.get(guild.channels, name=channel_name)
-    #     if channel is None:
-    #         await guild.create_text_channel(channel_name)
-    #         channel = discord.utils.get(guild.channels, name=channel_name)
-    #     self.spawn_channel = channel
-    #     await interaction.response.send_message(f'Spawn channel set to {channel.mention}', ephemeral=True)
-
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
